@@ -3,14 +3,7 @@ package com.hendisantika.resource;
 import com.hendisantika.entity.ShoppingCart;
 import io.smallrye.mutiny.Uni;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
@@ -66,6 +59,14 @@ public class ShoppingCartResource {
         return ShoppingCart.addProductToShoppingCart(id, product)
                 .onItem().ifNotNull().transform(entity -> Response.ok(entity).build())
                 .onItem().ifNull().continueWith(Response.ok().status(NOT_FOUND)::build);
+    }
 
+    @DELETE
+    @Path("{cartid}/{productid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Uni<Response> delete(@PathParam("cartid") Long id, @PathParam("productid") Long product) {
+        return ShoppingCart.deleteProductFromShoppingCart(id, product)
+                .onItem().ifNotNull().transform(entity -> Response.ok(entity).build())
+                .onItem().ifNull().continueWith(Response.ok().status(NOT_FOUND)::build);
     }
 }
