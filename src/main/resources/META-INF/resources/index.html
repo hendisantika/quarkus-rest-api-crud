@@ -1,171 +1,158 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>quarkus-rest-api-crud - 1.0-SNAPSHOT</title>
+    <meta charset="utf-8"/>
+    <title>CRUD Mission - Quarkus</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/wingcss/0.1.8/wing.min.css" rel="stylesheet"/>
     <style>
-        h1, h2, h3, h4, h5, h6 {
-            margin-bottom: 0.5rem;
-            font-weight: 400;
-            line-height: 1.5;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-        }
-
-        h2 {
-            font-size: 2rem
-        }
-
-        h3 {
-            font-size: 1.75rem
-
-        }
-
-        h4 {
-            font-size: 1.5rem
-        }
-
-        h5 {
-            font-size: 1.25rem
-        }
-
-        h6 {
-            font-size: 1rem
-        }
-
-        .lead {
-            font-weight: 300;
-            font-size: 2rem;
-        }
-
-        .banner {
-            font-size: 2.7rem;
-            margin: 0;
-            padding: 2rem 1rem;
-            background-color: #0d1c2c;
-            color: white;
-        }
-
-        body {
-            margin: 0;
-            font-family: -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-        }
-
-        code {
-            font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-            font-size: 87.5%;
-            color: #e83e8c;
-            word-break: break-word;
-        }
-
-        .left-column {
-            padding: .75rem;
-            max-width: 75%;
-            min-width: 55%;
-        }
-
-        .right-column {
-            padding: .75rem;
-            max-width: 25%;
-        }
-
-        .container {
-            display: flex;
+        input[type=number] {
             width: 100%;
-        }
-
-        li {
-            margin: 0.75rem;
-        }
-
-        .right-section {
-            margin-left: 1rem;
-            padding-left: 0.5rem;
-        }
-
-        .right-section h3 {
-            padding-top: 0;
-            font-weight: 200;
-        }
-
-        .right-section ul {
-            border-left: 0.3rem solid #71aeef;
-            list-style-type: none;
-            padding-left: 0;
-        }
-
-        .provided-code {
-            border-left: 0.3rem solid #71aeef;
-            padding-left: 10px;
-        }
-
-        .provided-code h3 {
-            font-weight: 200;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            -webkit-transition: .5s;
+            transition: .5s;
+            outline: 0;
+            font-family: 'Open Sans', serif;
         }
     </style>
-</head>
-<body>
+    <!-- Load AngularJS -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script type="text/javascript">
+        var app = angular.module("ProductManagement", []);
 
-<div class="banner lead">
-    Your new Cloud-Native application is ready!
-</div>
+        //Controller Part
+        app.controller("ProductManagementController", function ($scope, $http) {
+
+            //Initialize page with default data which is blank in this example
+            $scope.products = [];
+
+            $scope.form = {
+                id: -1,
+                name: ""
+            };
+
+            //Now load the data from server
+            _refreshPageData();
+
+            //HTTP POST/PUT methods for add/edit products
+            $scope.update = function () {
+                var method = "";
+                var url = "";
+                var data = {};
+                if ($scope.form.id == -1) {
+                    //Id is absent so add products - POST operation
+                    method = "POST";
+                    url = '/v1/products';
+                    data.description = $scope.form.name;
+                } else {
+                    //If Id is present, it's edit operation - PUT operation
+                    method = "PUT";
+                    url = '/v1/products/' + $scope.form.id;
+                    data.description = $scope.form.name;
+                }
+
+                $http({
+                    method: method,
+                    url: url,
+                    data: angular.toJson(data),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(_success, _error);
+            };
+
+            //HTTP DELETE- delete product by id
+            $scope.remove = function (product) {
+                $http({
+                    method: 'DELETE',
+                    url: '/v1/products/' + product.id
+                }).then(_success, _error);
+            };
+
+            //In case of edit products, populate form with product data
+            $scope.edit = function (product) {
+                $scope.form.name = product.description;
+                $scope.form.id = product.id;
+            };
+
+            /* Private Methods */
+
+            //HTTP GET- get all products collection
+            function _refreshPageData() {
+                $http({
+                    method: 'GET',
+                    url: '/v1/products'
+                }).then(function successCallback(response) {
+                    $scope.products = response.data;
+                }, function errorCallback(response) {
+                    console.log(response.statusText);
+                });
+            }
+
+            function _success(response) {
+                _refreshPageData();
+                _clearForm()
+            }
+
+            function _error(response) {
+                alert(response.data.message || response.statusText);
+            }
+
+            //Clear the form
+            function _clearForm() {
+                $scope.form.name = "";
+                $scope.form.id = -1;
+            }
+        });
+    </script>
+</head>
+<body ng-app="ProductManagement" ng-controller="ProductManagementController">
 
 <div class="container">
-    <div class="left-column">
-        <p class="lead"> Congratulations, you have created a new Quarkus cloud application.</p>
+    <h1>CRUD Mission - Quarkus</h1>
+    <p>This application demonstrates how a Quarkus application implements a CRUD endpoint to manage products.
+        This management interface invokes the CRUD service endpoint, which interacts with a database using JPA and
+        several other well known libraries.
+    </p>
+    <p>Behind the scenes, we have:
+    <ul>
+        <li>Hibernate Reactive taking care of all CRUD operations</li>
+        <li>RESTEasy Reactive powering the REST API</li>
+        <li>ArC, a CDI based dependency injection framework</li>
+        <li>The Undertow webserver</li>
+        <li>Some magic bytecode generation plugged in the compiler...</li>
+    </ul>
+    </p>
 
-        <h2>What is this page?</h2>
-
-        <p>This page is served by Quarkus. The source is in
-            <code>src/main/resources/META-INF/resources/index.html</code>.</p>
-
-        <h2>What are your next steps?</h2>
-
-        <p>If not already done, run the application in <em>dev mode</em> using: <code>./mvnw compile quarkus:dev</code>.
-        </p>
-        <ul>
-            <li>Your static assets are located in <code>src/main/resources/META-INF/resources</code>.</li>
-            <li>Configure your application in <code>src/main/resources/application.properties</code>.</li>
-            <li>Quarkus now ships with a <a href="/q/dev/">Dev UI</a> (available in dev mode only)</li>
-            <li>Play with the provided code located in <code>src/main/java</code>:</li>
-        </ul>
-        <div class="provided-code">
-            <h3>RESTEasy JAX-RS</h3>
-            <p>Easily start your RESTful Web Services</p>
-            <p><code>@Path: <a class="path-link" href="/hello" target="_blank">/hello</a></code></p>
-            <p><a class="guide-link" href="https://quarkus.io/guides/getting-started#the-jax-rs-resources"
-                  target="_blank">Related guide section...</a></p>
+    <h3>Add/Edit a product</h3>
+    <form ng-submit="update()">
+        <div class="row">
+            <div class="col-10"><input ng-model="form.name" placeholder="Name" size="60" type="text"/></div>
         </div>
+        <input type="submit" value="Save"/>
+    </form>
 
+    <h3>Product List</h3>
+    <div class="row">
+        <div class="col-2">Id</div>
+        <div class="col-2">Name</div>
+        <div class="col-2">Updated At</div>
+        <div class="col-2">Created At</div>
     </div>
-    <div class="right-column">
-        <div class="right-section">
-            <h3>Application</h3>
-            <ul>
-                <li>GroupId: <code>com.hendisantika</code></li>
-                <li>ArtifactId: <code>quarkus-rest-api-crud</code></li>
-                <li>Version: <code>1.0-SNAPSHOT</code></li>
-                <li>Quarkus Version: <code>2.2.3.Final</code></li>
-            </ul>
-        </div>
-        <div class="right-section">
-            <h3>Do you like Quarkus?</h3>
-            <ul>
-                <li>Go give it a star on <a href="https://github.com/quarkusio/quarkus">GitHub</a>.</li>
-            </ul>
-        </div>
-        <div class="right-section">
-            <h3>More reading</h3>
-            <ul>
-                <li><a href="https://quarkus.io/guides/maven-tooling.html" target="_blank">Setup your IDE</a></li>
-                <li><a href="https://quarkus.io/guides/getting-started.html" target="_blank">Getting started</a></li>
-                <li><a href="https://quarkus.io/guides/" target="_blank">All guides</a></li>
-                <li><a href="https://quarkus.io" target="_blank">Quarkus Web Site</a></li>
-            </ul>
+    <div class="row" ng-repeat="product in products">
+        <div class="col-2">{{ product.id }}</div>
+        <div class="col-2">{{ product.description }}</div>
+        <div class="col-2">{{ product.updatedAt }}</div>
+        <div class="col-2">{{ product.createdAt }}</div>
+        <div class="col-4"><a class="btn" ng-click="edit( product )">Edit</a> <a class="btn"
+                                                                                 ng-click="remove( product )">Remove</a>
         </div>
     </div>
 </div>
+
 </body>
 </html>
