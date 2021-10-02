@@ -3,19 +3,13 @@ package com.hendisantika.resource;
 import com.hendisantika.entity.Product;
 import io.smallrye.mutiny.Uni;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+import static javax.ws.rs.core.Response.Status.OK;
 
 /**
  * Created by IntelliJ IDEA.
@@ -63,5 +57,13 @@ public class ProductResource {
         return Product.updateProduct(id, product)
                 .onItem().ifNotNull().transform(entity -> Response.ok(entity).build())
                 .onItem().ifNull().continueWith(Response.ok().status(NOT_FOUND)::build);
+    }
+
+    @DELETE
+    @Path("{id}")
+    public Uni<Response> delete(@PathParam("id") Long id) {
+        return Product.deleteProduct(id)
+                .onItem().transform(entity -> !entity ? Response.serverError().status(NOT_FOUND).build()
+                        : Response.ok().status(OK).build());
     }
 }
