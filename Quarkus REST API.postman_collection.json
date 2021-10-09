@@ -1,0 +1,159 @@
+{
+  "info": {
+    "_postman_id": "eaa3f486-dfa9-4d08-ae8e-13a39759324c",
+    "name": "Quarkus REST API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Add New Products",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"title\": \"product_title\",\n    \"description\": \"product_description\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/v1/products",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "products"
+          ]
+        },
+        "description": "Add New Products"
+      },
+      "response": []
+    },
+    {
+      "name": "Create shopping cart",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"name\":\"myCart\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/v1/carts",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "carts"
+          ]
+        },
+        "description": "Create shopping cart"
+      },
+      "response": []
+    },
+    {
+      "name": "Get all products",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/products",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "products"
+          ]
+        },
+        "description": "Get all products"
+      },
+      "response": []
+    },
+    {
+      "name": "Add product to cart",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/carts/1/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "carts",
+            "1",
+            "1"
+          ]
+        },
+        "description": "Add product to cart"
+      },
+      "response": []
+    },
+    {
+      "name": "Get all carts",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/carts",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "carts"
+          ]
+        },
+        "description": "Get all carts"
+      },
+      "response": []
+    },
+    {
+      "name": "Get single cart",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/carts/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "carts",
+            "1"
+          ]
+        },
+        "description": "Get single cart"
+      },
+      "response": []
+    }
+  ]
+}
