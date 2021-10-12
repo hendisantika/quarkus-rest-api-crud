@@ -7,6 +7,7 @@ quarkus:
       max-size: '20'
     db-kind: postgresql
     jdbc:
+      ~: false
       url: jdbc:postgresql://localhost:5432/my_db
   flyway:
     migrate: 'true'
