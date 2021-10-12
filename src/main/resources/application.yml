@@ -1,9 +1,16 @@
+demo:
+  flyway:
+    migrate: true
+    migrate-at-start: true
+    locations: db/migration
+    baseline-on-migrate: true
+    baseline-version: 0
 quarkus:
   log:
     level: INFO
-  hibernate-orm:
-    database:
-      generation: drop-and-create
+    #  hibernate-orm:
+    #    database:
+    #      generation: drop-and-create
     log:
       sql: true
     dialect: org.hibernate.dialect.PostgreSQL10Dialect
@@ -11,11 +18,16 @@ quarkus:
       timezone: UTC
   datasource:
     db-kind: postgresql
-    username: user
-    password: password
-    jdbc: false
+    username: postgres
+    password: dafuq@911
+    jdbc:
+      ~: false
+#    jdbc:
+#      url: jdbc:postgresql://localhost:5432/postgres?schema=fins
     reactive:
-      url: postgresql://localhost:5432/my_db
+      ~: true
+      #      url: postgresql://localhost:5432/my_db?schema=product
+      url: postgresql://localhost:5432/postgres?schema=fins
       max-size: 20
 #"%prod":
 #  quarkus:
