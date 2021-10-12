@@ -9,6 +9,8 @@ quarkus:
     jdbc:
       ~: false
       url: jdbc:postgresql://localhost:5432/my_db
+  hibernate-orm:
+    dialect: org.hibernate.dialect.PostgreSQL10Dialect
   flyway:
     migrate: 'true'
     baseline-on-migrate: 'true'
@@ -20,6 +22,5 @@ quarkus:
     level: INFO
     log:
       sql: true
-    dialect: org.hibernate.dialect.PostgreSQL10Dialect
     jdbc:
       timezone: UTC
