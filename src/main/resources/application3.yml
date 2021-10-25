@@ -1,0 +1,66 @@
+quarkus:
+  datasource:
+    username: user
+    password: password
+    reactive:
+      ~: true
+      url: postgresql://localhost:5432/my_db
+      max-size: '20'
+    db-kind: postgresql
+    jdbc:
+      ~: false
+      url: jdbc:postgresql://localhost:5432/my_db?schema=product
+  hibernate-orm:
+    dialect: org.hibernate.dialect.PostgreSQL10Dialect
+    generation:
+      create-schemas: true
+  flyway:
+    create-schemas: true
+    schemas: product
+    validate-on-migrate: true
+    migrate: true
+    baseline-on-migrate: true
+    locations: db/migration
+    migrate-at-start: true
+    baseline-version: 0
+  log:
+    level: INFO
+    log:
+      sql: true
+    jdbc:
+      timezone: UTC
+
+# Dev Profile
+"%dev":
+  quarkus:
+    datasource:
+      username: user
+      password: password
+      reactive:
+        ~: true
+        url: h2:mem:product;DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS product;
+        max-size: '20'
+      db-kind: postgresql
+      jdbc:
+        ~: false
+        url: jdbc:h2:mem:product;DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS product;
+    hibernate-orm:
+      #      physical-naming-strategy: io.quarkus.hibernate.orm.naming.PrefixPhysicalNamingStrategy
+      dialect: org.hibernate.dialect.H2Dialect
+      generation:
+        create-schemas: true
+    flyway:
+      create-schemas: true
+      schemas: product
+      validate-on-migrate: true
+      migrate: true
+      baseline-on-migrate: true
+      locations: db/migration
+      migrate-at-start: true
+      baseline-version: 0
+    log:
+      level: INFO
+      log:
+        sql: true
+      jdbc:
+        timezone: UTC
