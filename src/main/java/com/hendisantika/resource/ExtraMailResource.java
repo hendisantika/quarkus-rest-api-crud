@@ -1,8 +1,11 @@
 package com.hendisantika.resource;
 
+import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.Mailer;
+import io.smallrye.common.annotation.Blocking;
 
 import javax.inject.Inject;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
 /**
@@ -20,4 +23,14 @@ public class ExtraMailResource {
     @Inject
     Mailer mailer;
 
+    @GET
+    @Path("/attachment")
+    @Blocking
+    public void sendEmailWithAttachment() {
+        mailer.send(Mail.withText("your-destination-email@quarkus.io", "An email from quarkus with attachment",
+                        "This is my body")
+                .addAttachment("my-file-1.txt",
+                        "content of my file".getBytes(), "text/plain")
+        );
+    }
 }
