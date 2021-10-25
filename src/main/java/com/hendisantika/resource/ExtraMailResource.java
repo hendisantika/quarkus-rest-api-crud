@@ -1,7 +1,9 @@
 package com.hendisantika.resource;
 
 import io.quarkus.mailer.Mail;
+import io.quarkus.mailer.MailTemplate;
 import io.quarkus.mailer.Mailer;
+import io.quarkus.qute.CheckedTemplate;
 import io.smallrye.common.annotation.Blocking;
 
 import javax.inject.Inject;
@@ -33,4 +35,10 @@ public class ExtraMailResource {
                         "content of my file".getBytes(), "text/plain")
         );
     }
+
+    @CheckedTemplate
+    static class Templates {
+        public static native MailTemplate.MailTemplateInstance hello(String name); // <1>
+    }
+
 }
