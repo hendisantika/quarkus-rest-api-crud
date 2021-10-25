@@ -4,6 +4,7 @@ import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.MailTemplate;
 import io.quarkus.mailer.Mailer;
 import io.quarkus.qute.CheckedTemplate;
+import io.quarkus.qute.Location;
 import io.smallrye.common.annotation.Blocking;
 import io.smallrye.mutiny.Uni;
 
@@ -50,5 +51,18 @@ public class ExtraMailResource {
                 .to("your-destination-email@quarkus.io")
                 .subject("Hello from Qute template")
                 .send();
+    }
+
+    @Inject
+    @Location("foo")
+    MailTemplate foo; // <1>
+
+    @GET
+    @Path("/template2")
+    public Uni<Void> sendTemplate2() {
+        return foo.to("your-destination-email@quarkus.io") // <2>
+                .subject("Hello from Qute template")
+                .data("name", "John Doe") // <3>
+                .send(); // <4>
     }
 }
