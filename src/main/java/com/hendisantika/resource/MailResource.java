@@ -5,6 +5,7 @@ import io.quarkus.mailer.Mailer;
 import io.quarkus.mailer.reactive.ReactiveMailer;
 import io.smallrye.common.annotation.Blocking;
 import io.smallrye.mutiny.Uni;
+import org.jboss.logging.Logger;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -28,11 +29,15 @@ public class MailResource {
     @Inject
     ReactiveMailer reactiveMailer;
 
+    @Inject
+    Logger logger;
+
     @GET
     @Blocking
     public void sendEmail() {
         mailer.send(Mail.withText("hendi@yopmail.com", "Ahoy from Quarkus", "A simple email sent from" +
                 " a Quarkus application."));
+        logger.info("Email sent!");
     }
 
     @GET
