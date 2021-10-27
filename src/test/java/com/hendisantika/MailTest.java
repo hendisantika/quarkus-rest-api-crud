@@ -2,6 +2,7 @@ package com.hendisantika;
 
 import io.quarkus.mailer.MockMailbox;
 import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.BeforeEach;
 
 import javax.inject.Inject;
 
@@ -22,4 +23,8 @@ class MailTest {
     @Inject
     MockMailbox mailbox;
 
+    @BeforeEach
+    void init() {
+        mailbox.clear();
+    }
 }
