@@ -1,15 +1,15 @@
 package com.hendisantika.resource;
 
 import com.hendisantika.entity.Product;
-import io.smallrye.mutiny.Uni;
+import com.hendisantika.repository.ProductRepository;
 
+import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-
-import static javax.ws.rs.core.Response.Status.NOT_FOUND;
-import static javax.ws.rs.core.Response.Status.OK;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,48 +22,51 @@ import static javax.ws.rs.core.Response.Status.OK;
  */
 @Path("/v1/products")
 public class ProductResource {
+    @Inject
+    ProductRepository productRepository;
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Uni<Response> getProducts() {
-        return Product.getAllProducts()
-                .onItem().transform(products -> Response.ok(products))
-                .onItem().transform(Response.ResponseBuilder::build);
+    public List<Product> getProducts() {
+        return productRepository.listAll();
     }
 
     @GET
     @Path("{id}")
-    public Uni<Response> getSingleProduct(@PathParam("id") Long id) {
-        return Product.findByProductId(id)
-                .onItem().ifNotNull().transform(product -> Response.ok(product).build())
-                .onItem().ifNull().continueWith(Response.ok().status(NOT_FOUND)::build);
+    public Product getSingleProduct(@PathParam("id") Long id) {
+        return productRepository.findByProductId(id);
     }
 
     @POST
+    @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Uni<Response> add(Product product) {
-        return Product.addProduct(product)
-                .onItem().transform(id -> URI.create("/v1/products/" + id.id))
-                .onItem().transform(uri -> Response.created(uri))
-                .onItem().transform(Response.ResponseBuilder::build);
+    public Response add(Product product) {
+        productRepository.persist(product);
+        return Response.created(URI.create("/products/" + product.id)).build();
     }
 
     @PUT
+    @Transactional
     @Path("{id}")
-    public Uni<Response> update(@PathParam("id") Long id, Product product) {
-        if (product == null || product.description == null) {
+    public Product update(@PathParam("id") Long id, Product product) {
+        Product result = productRepository.findByProductId(id);
+        if (result == null) {
             throw new WebApplicationException("Product description was not set on request.", 422);
         }
-        return Product.updateProduct(id, product)
-                .onItem().ifNotNull().transform(entity -> Response.ok(entity).build())
-                .onItem().ifNull().continueWith(Response.ok().status(NOT_FOUND)::build);
+        result.title = product.title;
+        result.description = product.description;
+        return result;
     }
 
     @DELETE
+    @Transactional
     @Path("{id}")
-    public Uni<Response> delete(@PathParam("id") Long id) {
-        return Product.deleteProduct(id)
-                .onItem().transform(entity -> !entity ? Response.serverError().status(NOT_FOUND).build()
-                        : Response.ok().status(OK).build());
+    public void delete(@PathParam("id") Long id) {
+        Product result = productRepository.findByProductId(id);
+        if (result == null) {
+            throw new WebApplicationException("Product ID was not set on request.", 422);
+        }
+        result.delete();
     }
 }

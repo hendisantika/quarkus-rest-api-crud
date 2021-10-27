@@ -31,7 +31,7 @@ public class MailResource {
     @GET
     @Blocking
     public void sendEmail() {
-        mailer.send(Mail.withText("your-destination-email@quarkus.io", "Ahoy from Quarkus", "A simple email sent from" +
+        mailer.send(Mail.withText("hendi@yopmail.com", "Ahoy from Quarkus", "A simple email sent from" +
                 " a Quarkus application."));
     }
 
