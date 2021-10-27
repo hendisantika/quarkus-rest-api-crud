@@ -6,6 +6,7 @@ import com.hendisantika.repository.ProductRepository;
 import com.hendisantika.repository.ShoppingCartRepository;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -43,6 +44,7 @@ public class ShoppingCartResource {
     }
 
     @POST
+    @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createShoppingCart(ShoppingCart shoppingCart) {
