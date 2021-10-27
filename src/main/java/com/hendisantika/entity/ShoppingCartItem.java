@@ -1,8 +1,7 @@
 package com.hendisantika.entity;
 
-import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.smallrye.common.constraint.NotNull;
-import io.smallrye.mutiny.Multi;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -53,14 +52,4 @@ public class ShoppingCartItem extends PanacheEntityBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     public Product product;
-
-
-    public static Multi<ShoppingCartItem> findByCartIdByProductId(Long cartId, Long productId) {
-        return stream("cart.id = ?1 and product.id = ?2", cartId, productId);
-    }
-
-
-    public String toString() {
-        return this.getClass().getSimpleName() + "<" + this.id + ">";
-    }
 }
