@@ -51,4 +51,9 @@ public class Product extends PanacheEntityBase {
     public String toString() {
         return this.getClass().getSimpleName() + "<" + this.id + ">";
     }
+
+    public Product(String title, String description) {
+        this.title = title;
+        this.description = description;
+    }
 }

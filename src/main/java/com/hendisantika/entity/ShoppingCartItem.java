@@ -28,7 +28,7 @@ import java.math.BigDecimal;
 @Builder
 @Cacheable
 @Getter
-@Table(indexes = {
+@Table(name = "ShoppingCartItem", schema = "product", indexes = {
         @Index(name = "shopping_cart_item_cart_product_index", columnList = "cart_id, product_id"),
 })
 public class ShoppingCartItem extends PanacheEntityBase {
