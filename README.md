@@ -68,7 +68,7 @@ Easily start your RESTful Web Services
 
 ### Create shopping cart
 
-     curl-s -X POST "http://localhost:8080/v1/carts" -H "Content-Type: application/json" -d '{"name":"myCart"}'
+     curl -s -X POST "http://localhost:8080/v1/carts" -H "Content-Type: application/json" -d '{"name":"myCart", "cartTotal": 2}'
 
 ### Add a product
 
