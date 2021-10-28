@@ -49,10 +49,22 @@ class MailTest {
         List<Mail> sent = mailbox.getMessagesSentTo(TO);
         assertThat(sent).hasSize(1);
         Mail actual = sent.get(0);
-//        assertThat(actual.getText()).contains("Wake up!");
         assertThat(actual.getText()).contains("A simple email sent from a Quarkus application.");
         assertThat(actual.getSubject()).isEqualTo("Ahoy from Quarkus");
 
         assertThat(mailbox.getTotalMessagesSent()).isEqualTo(1);
+    }
+
+    @Test
+    void testInvalidMail() {
+        given()
+                .queryParam("name", "foo")
+                .queryParam("email", "not-an-email")
+                .when()
+                .get("/type-safe")
+                .then()
+                .statusCode(400);
+
+        assertThat(mailbox.getTotalMessagesSent()).isEqualTo(0);
     }
 }
